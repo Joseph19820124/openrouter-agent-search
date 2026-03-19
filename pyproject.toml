@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openrouter-agent-search"
+version = "0.1.0"
+description = "OpenRouter agent search backend and CLI"
+requires-python = ">=3.10"
+dependencies = [
+  "openai",
+  "openai-agents",
+  "requests",
+  "fastapi",
+  "uvicorn",
+  "pydantic",
+  "google-auth",
+]
+
+[project.scripts]
+search-web = "cli:main"
+
+[tool.setuptools]
+py-modules = ["agent_app", "backend_api", "cli"]

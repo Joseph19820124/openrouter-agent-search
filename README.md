@@ -42,7 +42,7 @@ Create and activate a virtual environment:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 ```
 
 Create an environment file:
@@ -78,6 +78,19 @@ Health check:
 ```bash
 curl http://127.0.0.1:8000/health
 ```
+
+## Run the CLI
+
+After `pip install -e .`, you can search from the terminal:
+
+```bash
+search-web "Responses API"
+```
+
+Optional flags:
+
+- `-n 3` to limit results
+- `--json` to print raw JSON
 
 ## Run the agent
 
