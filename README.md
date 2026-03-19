@@ -5,7 +5,7 @@ Minimal reference project for:
 - OpenRouter as the LLM provider
 - OpenAI Agents SDK for orchestration
 - FastAPI as the tool backend
-- AWS Lambda for Google Custom Search JSON API calls
+- Vertex AI Search for website search
 
 ## Architecture
 
@@ -13,29 +13,27 @@ Minimal reference project for:
 Agent SDK
   -> custom function tool: search_web()
   -> FastAPI /agent/search
-  -> AWS Lambda
-  -> Google Custom Search JSON API
+  -> Vertex AI Search
   -> results returned to the agent
 ```
 
 ## Files
 
 - `agent_app.py`: Agent SDK app wired to OpenRouter
-- `backend_api.py`: FastAPI backend that invokes Lambda
-- `lambda/lambda_function.py`: Lambda function that calls Google Custom Search
+- `backend_api.py`: FastAPI backend that calls Vertex AI Search
+- `lambda/lambda_function.py`: Legacy Lambda example for Google Custom Search
 
 ## Prerequisites
 
 - Python 3.10+
 - An OpenRouter API key
-- An AWS account with Lambda access
-- A Google Programmable Search Engine
-- A Google Custom Search JSON API key
+- A GCP project with Vertex AI Search / Discovery Engine enabled
+- A Google service account JSON key with Vertex AI Search access
 
 Google docs:
 
-- https://developers.google.com/custom-search/v1/overview
-- https://developers.google.com/custom-search/v1/using_rest
+- https://docs.cloud.google.com/generative-ai-app-builder/docs/create-engine-es
+- https://docs.cloud.google.com/generative-ai-app-builder/docs/create-datastore-ingest
 
 ## Setup
 
@@ -57,9 +55,9 @@ Fill in these values in `.env`:
 
 - `OPENROUTER_API_KEY`
 - `OPENROUTER_MODEL`
-- `SEARCH_LAMBDA_NAME`
-- `GOOGLE_API_KEY`
-- `GOOGLE_CSE_ID`
+- `VERTEX_PROJECT_ID`
+- `VERTEX_ENGINE_ID`
+- `GOOGLE_APPLICATION_CREDENTIALS`
 
 Load the environment:
 
@@ -92,31 +90,19 @@ set +a
 python3 agent_app.py
 ```
 
-## Deploy the Lambda
+## Vertex AI Search Notes
 
-Install the Lambda dependency into a build folder:
+- This project avoids OpenAI `WebSearchTool` and uses a custom tool instead.
+- The backend now calls Vertex AI Search directly and returns a normalized shape:
+  - `results[{title,url,snippet}]`
+- `VERTEX_ENGINE_ID` should point at a website search app / engine.
+- `GOOGLE_APPLICATION_CREDENTIALS` should point at a service account JSON key file on the machine running FastAPI.
 
-```bash
-cd lambda
-python3 -m pip install -r requirements.txt -t package
-cp lambda_function.py package/
-cd package
-zip -r ../lambda.zip .
-```
+## Legacy Path
 
-Upload `lambda/lambda.zip` to AWS Lambda and set these environment variables on the function:
-
-- `GOOGLE_API_KEY`
-- `GOOGLE_CSE_ID`
-
-The Lambda handler should be:
-
-```text
-lambda_function.handler
-```
+The `lambda/` directory is kept as a legacy example for the earlier Google Custom Search approach. It is no longer used by the default FastAPI backend.
 
 ## Notes
 
-- This project avoids OpenAI `WebSearchTool` and uses a custom tool instead.
-- That makes it easier to swap the search backend without changing the agent logic.
+- Using a custom backend still makes it easy to swap the search provider without changing agent logic.
 - For OpenRouter, verify the exact model ID in the OpenRouter model catalog before production use.

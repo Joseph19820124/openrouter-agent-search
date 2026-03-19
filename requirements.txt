@@ -3,5 +3,5 @@ openai-agents
 requests
 fastapi
 uvicorn
-boto3
 pydantic
+google-auth
