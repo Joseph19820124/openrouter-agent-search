@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 search-web = "cli:main"
+code-agent = "coding_agent_cli:main"
 
 [tool.setuptools]
-py-modules = ["agent_app", "backend_api", "cli"]
+py-modules = ["agent_app", "backend_api", "cli", "coding_agent_cli"]

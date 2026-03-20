@@ -92,6 +92,29 @@ Optional flags:
 - `-n 3` to limit results
 - `--json` to print raw JSON
 
+## Run the Coding Agent CLI
+
+After `pip install -e .`, you can run a minimal coding agent from the terminal:
+
+```bash
+code-agent "Inspect this repo and summarize the backend architecture"
+```
+
+It currently exposes these capabilities to the model:
+
+- list files
+- search code with `rg`
+- read files
+- write files
+- run a restricted set of shell commands
+- call the existing website search backend
+
+Notes:
+
+- `code-agent` needs an LLM API key through `CODER_API_KEY`, `OPENROUTER_API_KEY`, or `OPENAI_API_KEY`
+- by default it operates in the current working directory
+- use `--workdir /path/to/repo` to point it at another workspace
+
 ## Run the agent
 
 In a second terminal:
